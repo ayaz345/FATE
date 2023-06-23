@@ -34,10 +34,8 @@ def sub_include_examples(match):
     example_name = match.group("example_name")
     indents_level0 = match.group("_includer_indent")
 
-    lines = []
-    lines.append(f"{indents_level0}???+ Example\n")
-    lines.append(f"{indents_level0}\n")
-    indents_level1 = indents_level0 + "    "
+    lines = [f"{indents_level0}???+ Example\n", f"{indents_level0}\n"]
+    indents_level1 = f"{indents_level0}    "
     for example_type, pretty_name in [("pipeline", "Pipeline"), ("dsl/v2", "DSL")]:
         include_path = os.path.join(_EXAMPLES_BASE, example_type, example_name, "*.*")
         lines.append(f'{indents_level1}=== "{pretty_name}"\n\n')
@@ -47,9 +45,7 @@ def sub_include_examples(match):
             if name.endswith("README.md") or name.endswith("readme.md"):
                 lines.append(f"{indents_level2}```markdown\n")
                 with open(name) as f:
-                    for line in f.readlines():
-                        lines.append(f"{indents_level2}{line}")
-
+                    lines.extend(f"{indents_level2}{line}" for line in f)
                 lines.append(f"{indents_level2}\n")
                 lines.append(f"{indents_level2}```\n")
                 lines.append(f"{indents_level2}\n")
@@ -65,8 +61,7 @@ def sub_include_examples(match):
             lines.append(f"{indents_level2}    ```{lint}\n")
             head = True
             with open(file_name) as f:
-                for line in f.readlines():
-                    # skip license
+                for line in f:
                     if head:
                         if line.strip() == "" or line.lstrip().startswith("#"):
                             continue
@@ -88,7 +83,7 @@ def sub_include_example(src_file_path):
         lines.append(f"{indents_level0}\n")
         lines.append(f'{indents_level0}??? Example "{example_path}"\n')
         lines.append(f"{indents_level0}\n")
-        indents_level1 = indents_level0 + "    "
+        indents_level1 = f"{indents_level0}    "
         abs_file_path = os.path.abspath(
             os.path.join(src_file_path, os.pardir, example_path)
         )
@@ -98,7 +93,7 @@ def sub_include_example(src_file_path):
                 lint = _LINT_MAP.get(file_extension, "")
                 lines.append(f"{indents_level1}```{lint}\n")
                 head = True
-                for line in f.readlines():
+                for line in f:
                     # skip license
                     if head:
                         if line.strip() == "" or line.lstrip().startswith("#"):
@@ -152,8 +147,7 @@ _COMMENT_REGEX = re.compile(
 
 
 def _remove_comment(match):
-    content = match.group("_content")
-    return content
+    return match.group("_content")
 
 
 def on_page_markdown(markdown, page, **kwargs):

@@ -36,8 +36,8 @@ def main(data_base=DATA_BASE):
     partition = 4
 
     # table name and namespace, used in FATE job configuration
-    dense_data = {"name": "breast_hetero_guest", "namespace": f"experiment"}
-    tag_data = {"name": "breast_hetero_host", "namespace": f"experiment"}
+    dense_data = {"name": "breast_hetero_guest", "namespace": "experiment"}
+    tag_data = {"name": "breast_hetero_host", "namespace": "experiment"}
 
     pipeline_upload = PipeLine().set_initiator(role="guest", party_id=guest).set_roles(guest=guest)
     # add upload data info

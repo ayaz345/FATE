@@ -48,8 +48,7 @@ class TestModel(t.nn.Module):
         x_guest, x_host = data[0].type(t.float), data[1].type(t.float)
         guest_fw = self.inter_a(self.guest_bottom(x_guest))
         host_fw = self.inter_b(self.host_bottom(x_host))
-        out = self.top_model_guest(guest_fw + host_fw)
-        return out
+        return self.top_model_guest(guest_fw + host_fw)
 
     def predict(self, data):
         rs = self.forward(data)
@@ -109,8 +108,7 @@ def main(config="./config.yaml", param="./hetero_nn_breast_config.yaml"):
         if param['eval_type'] == 'binary':
             loss_fn = t.nn.BCELoss()
 
-        for i in tqdm.tqdm(range(param['epochs'])):
-
+        for _ in tqdm.tqdm(range(param['epochs'])):
             for gd, hd, label in dataloader:
                 optimizer.zero_grad()
                 pred = model([gd, hd])

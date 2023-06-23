@@ -87,9 +87,6 @@ def main(config="../../config.yaml", param="./breast_lr_config.yaml", namespace=
     # get and configure DataTransform party instance of host
     data_transform_0.get_party_instance(role='host', party_id=host).component_param(with_label=True)
 
-    lr_param = {
-    }
-
     config_param = {
         "penalty": param["penalty"],
         "max_iter": param["max_iter"],
@@ -101,7 +98,7 @@ def main(config="../../config.yaml", param="./breast_lr_config.yaml", namespace=
             "init_method": param.get("init_method", 'random_uniform')
         }
     }
-    lr_param.update(config_param)
+    lr_param = {} | config_param
     print(f"lr_param: {lr_param}, data_set: {data_set}")
     homo_lr_0 = HomoLR(name='homo_lr_0', **lr_param)
     homo_lr_1 = HomoLR(name='homo_lr_1')

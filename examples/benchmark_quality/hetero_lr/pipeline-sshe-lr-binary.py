@@ -90,9 +90,6 @@ def main(config="../../config.yaml", param="./lr_config.yaml", namespace=""):
     # define Intersection component
     intersection_0 = Intersection(name="intersection_0")
 
-    lr_param = {
-    }
-
     config_param = {
         "penalty": param["penalty"],
         "max_iter": param["max_iter"],
@@ -110,7 +107,7 @@ def main(config="../../config.yaml", param="./lr_config.yaml", namespace=""):
         "reveal_strategy": param.get("reveal_strategy", "respectively"),
         "reveal_every_iter": True
     }
-    lr_param.update(config_param)
+    lr_param = {} | config_param
     print(f"lr_param: {lr_param}, data_set: {data_set}")
     hetero_sshe_lr_0 = HeteroSSHELR(name='hetero_sshe_lr_0', **lr_param)
     hetero_sshe_lr_1 = HeteroSSHELR(name='hetero_sshe_lr_1')

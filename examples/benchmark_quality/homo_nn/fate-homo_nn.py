@@ -61,11 +61,7 @@ def main(config="../../config.yaml", param="param_conf.yaml", namespace=""):
     is_multy = param["is_multy"]
     data = getattr(dataset, param.get("dataset", "vehicle"))
 
-    if is_multy:
-        loss = t.nn.CrossEntropyLoss()
-    else:
-        loss = t.nn.BCELoss()
-
+    loss = t.nn.CrossEntropyLoss() if is_multy else t.nn.BCELoss()
     input_shape = 18 if is_multy else 30
     output_shape = 4 if is_multy else 1
     out_act = t.nn.Softmax(dim=1) if is_multy else t.nn.Sigmoid()
@@ -133,10 +129,7 @@ def main(config="../../config.yaml", param="param_conf.yaml", namespace=""):
         model=model)
     homo_nn_1 = HomoNN(name="homo_nn_1")
 
-    if is_multy:
-        eval_type = "multi"
-    else:
-        eval_type = "binary"
+    eval_type = "multi" if is_multy else "binary"
     evaluation_0 = Evaluation(
         name='evaluation_0',
         eval_type=eval_type,

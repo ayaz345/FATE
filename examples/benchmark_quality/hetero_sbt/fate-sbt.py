@@ -73,10 +73,7 @@ def main(config="../../config.yaml", param="./xgb_config_binary.yaml", namespace
     intersect_0 = Intersection(name="intersection_0")
     intersect_1 = Intersection(name="intersection_1")
 
-    # secure boost component
-    multi_mode = 'single_output'
-    if 'multi_mode' in param:
-        multi_mode = param['multi_mode']
+    multi_mode = param['multi_mode'] if 'multi_mode' in param else 'single_output'
     hetero_secure_boost_0 = HeteroSecureBoost(name="hetero_secure_boost_0",
                                               num_trees=param['tree_num'],
                                               task_type=param['task_type'],

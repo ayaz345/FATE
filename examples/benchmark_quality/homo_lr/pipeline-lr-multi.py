@@ -42,12 +42,11 @@ def main(config="../../config.yaml", param="./breast_lr_config.yaml", namespace=
 
     assert isinstance(param, dict)
     data_set = param.get("data_guest").split('/')[-1]
-    if data_set == "vehicle_scale_homo_guest.csv":
-        guest_data_table = 'vehicle_scale_homo_guest'
-        host_data_table = 'vehicle_scale_homo_host'
-    else:
+    if data_set != "vehicle_scale_homo_guest.csv":
         raise ValueError(f"Cannot recognized data_set: {data_set}")
 
+    guest_data_table = 'vehicle_scale_homo_guest'
+    host_data_table = 'vehicle_scale_homo_host'
     guest_train_data = {"name": guest_data_table, "namespace": f"experiment{namespace}"}
     host_train_data = {"name": host_data_table, "namespace": f"experiment{namespace}"}
     # initialize pipeline
@@ -74,9 +73,6 @@ def main(config="../../config.yaml", param="./breast_lr_config.yaml", namespace=
     # get and configure DataTransform party instance of host
     data_transform_0.get_party_instance(role='host', party_id=host).component_param(with_label=True)
 
-    lr_param = {
-    }
-
     config_param = {
         "penalty": param["penalty"],
         "max_iter": param["max_iter"],
@@ -88,7 +84,7 @@ def main(config="../../config.yaml", param="./breast_lr_config.yaml", namespace=
             "init_method": 'random_uniform'
         }
     }
-    lr_param.update(config_param)
+    lr_param = {} | config_param
     print(f"lr_param: {lr_param}, data_set: {data_set}")
     homo_lr_0 = HomoLR(name='homo_lr_0', **lr_param)
     homo_lr_1 = HomoLR(name='homo_lr_1')

@@ -32,7 +32,7 @@ def main(config="../../config.yaml", param="./gbdt_config_multi.yaml"):
     idx = param["idx"]
     label_name = param["label_name"]
 
-    print('config is {}'.format(config))
+    print(f'config is {config}')
     if isinstance(config, str):
         config = JobConfig.load_from_file(config)
         data_base_dir = config["data_base_dir"]

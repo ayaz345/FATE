@@ -3,7 +3,7 @@ import os
 import sys
 
 cur_path = os.path.realpath(__file__)
-for i in range(4):
+for _ in range(4):
     cur_path = os.path.dirname(cur_path)
 print(f'fate_path: {cur_path}')
 sys.path.append(cur_path)
@@ -36,17 +36,17 @@ def extract(my_pipeline, file_name, output_path='generated_conf_and_dsl'):
     out_name = out_name.replace('pipeline-', '').replace('.py', '').replace('-', '_')
     conf = my_pipeline.get_train_conf()
     dsl = my_pipeline.get_train_dsl()
-    conf_name = './{}/{}_conf.json'.format(output_path, out_name)
-    dsl_name = './{}/{}_dsl.json'.format(output_path, out_name)
+    conf_name = f'./{output_path}/{out_name}_conf.json'
+    dsl_name = f'./{output_path}/{out_name}_dsl.json'
     json.dump(conf, open(conf_name, 'w'), indent=4)
-    print('conf name is {}'.format(conf_name))
+    print(f'conf name is {conf_name}')
     json.dump(dsl, open(dsl_name, 'w'), indent=4)
-    print('dsl name is {}'.format(dsl_name))
+    print(f'dsl name is {dsl_name}')
 
 
 def get_testsuite_file(testsuite_file_path):
     import examples
-    cpn_path = os.path.dirname(examples.__file__) + f'/dsl/v1/{testsuite_file_path}'
+    cpn_path = f'{os.path.dirname(examples.__file__)}/dsl/v1/{testsuite_file_path}'
     with open(cpn_path, 'r', encoding='utf-8') as load_f:
         testsuite_json = json.load(load_f)
     testsuite_json['tasks'] = {}
@@ -61,29 +61,29 @@ def do_generated(fold_name='hetero_logistic_regression'):
     replaced_path = 'replaced_code'
     generated_path = 'generated_conf_and_dsl'
 
-    if not os.path.exists('./{}'.format(replaced_path)):
-        os.system('mkdir {}'.format(replaced_path))
+    if not os.path.exists(f'./{replaced_path}'):
+        os.system(f'mkdir {replaced_path}')
 
-    if not os.path.exists('./{}'.format(generated_path)):
-        os.system('mkdir {}'.format(generated_path))
+    if not os.path.exists(f'./{generated_path}'):
+        os.system(f'mkdir {generated_path}')
 
     for f in files:
         if not f.startswith("pipeline"):
             continue
         print(f)
         code_str = insert_extract_code(f, fold_name)
-        open('./{}/{}'.format(replaced_path, f), 'w').write(code_str)
+        open(f'./{replaced_path}/{f}', 'w').write(code_str)
         print('replace done')
-        # file_path = folder + f
-        # os.system(cmd.format(folder + f))
+            # file_path = folder + f
+            # os.system(cmd.format(folder + f))
 
-    exe_files = os.listdir('./{}/'.format(replaced_path))
+    exe_files = os.listdir(f'./{replaced_path}/')
     for f in exe_files:
-        print('executing {}'.format(f))
-        os.system(cmd.format('./{}/'.format(replaced_path) + f))
+        print(f'executing {f}')
+        os.system(cmd.format(f'./{replaced_path}/{f}'))
 
     suite_json = get_testsuite_file('hetero_logistic_regression/hetero_lr_testsuite.json')
-    conf_files = os.listdir('./{}/'.format(generated_path))
+    conf_files = os.listdir(f'./{generated_path}/')
     f_dsl = {"-".join(f.split('_')[2: -1]): f for f in conf_files if 'dsl.json' in f}
     f_conf = {"-".join(f.split('_')[2: -1]): f for f in conf_files if 'conf.json' in f}
 
@@ -94,7 +94,7 @@ def do_generated(fold_name='hetero_logistic_regression'):
             "dsl": dsl_file
         }
 
-    with open('./{}/{}_testsuite.json'.format(generated_path, fold_name), 'w', encoding='utf-8') as json_file:
+    with open(f'./{generated_path}/{fold_name}_testsuite.json', 'w', encoding='utf-8') as json_file:
         json.dump(suite_json, json_file, ensure_ascii=False, indent=4)
 
     # os.system('rm -rf {}'.format(replaced_path))

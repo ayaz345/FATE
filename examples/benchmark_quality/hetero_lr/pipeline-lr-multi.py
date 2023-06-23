@@ -43,12 +43,11 @@ def main(config="../../config.yaml", param="./vehicle_config.yaml", namespace=""
 
     assert isinstance(param, dict)
     data_set = param.get("data_guest").split('/')[-1]
-    if data_set == "vehicle_scale_hetero_guest.csv":
-        guest_data_table = 'vehicle_scale_hetero_guest'
-        host_data_table = 'vehicle_scale_hetero_host'
-    else:
+    if data_set != "vehicle_scale_hetero_guest.csv":
         raise ValueError(f"Cannot recognized data_set: {data_set}")
 
+    guest_data_table = 'vehicle_scale_hetero_guest'
+    host_data_table = 'vehicle_scale_hetero_host'
     guest_train_data = {"name": guest_data_table, "namespace": f"experiment{namespace}"}
     host_train_data = {"name": host_data_table, "namespace": f"experiment{namespace}"}
 
@@ -79,9 +78,6 @@ def main(config="../../config.yaml", param="./vehicle_config.yaml", namespace=""
     # define Intersection component
     intersection_0 = Intersection(name="intersection_0")
 
-    lr_param = {
-    }
-
     config_param = {
         "penalty": param["penalty"],
         "max_iter": param["max_iter"],
@@ -97,7 +93,7 @@ def main(config="../../config.yaml", param="./vehicle_config.yaml", namespace=""
             "random_seed": param.get("random_seed", 103)
         }
     }
-    lr_param.update(config_param)
+    lr_param = {} | config_param
     print(f"lr_param: {lr_param}, data_set: {data_set}")
     hetero_lr_0 = HeteroLR(name='hetero_lr_0', **lr_param)
     hetero_lr_1 = HeteroLR(name='hetero_lr_1')

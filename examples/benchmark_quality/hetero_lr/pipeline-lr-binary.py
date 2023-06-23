@@ -91,9 +91,6 @@ def main(config="../../config.yaml", param="./lr_config.yaml", namespace=""):
     # define Intersection component
     intersection_0 = Intersection(name="intersection_0")
 
-    lr_param = {
-    }
-
     config_param = {
         "penalty": param["penalty"],
         "max_iter": param["max_iter"],
@@ -111,7 +108,7 @@ def main(config="../../config.yaml", param="./lr_config.yaml", namespace=""):
             "random_seed": param.get("random_seed", 103)
         }
     }
-    lr_param.update(config_param)
+    lr_param = {} | config_param
     print(f"lr_param: {lr_param}, data_set: {data_set}")
     hetero_lr_0 = HeteroLR(name='hetero_lr_0', **lr_param)
     hetero_lr_1 = HeteroLR(name='hetero_lr_1')

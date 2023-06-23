@@ -64,11 +64,7 @@ def build(param, shape1, shape2, lr):
 
 def fit(epoch, model, optimizer, loss, batch_size, dataset):
 
-    print(
-        'model is {}, loss is {}, optimizer is {}'.format(
-            model,
-            loss,
-            optimizer))
+    print(f'model is {model}, loss is {loss}, optimizer is {optimizer}')
     dl = DataLoader(dataset, batch_size=batch_size)
     for i in range(epoch):
         epoch_loss = 0
@@ -79,7 +75,7 @@ def fit(epoch, model, optimizer, loss, batch_size, dataset):
             epoch_loss += l.detach().numpy()
             l.backward()
             optimizer.step()
-        print('epoch is {}, epoch loss is {}'.format(i, epoch_loss))
+        print(f'epoch is {i}, epoch loss is {epoch_loss}')
 
 
 def predict(model, Xa, Xb):

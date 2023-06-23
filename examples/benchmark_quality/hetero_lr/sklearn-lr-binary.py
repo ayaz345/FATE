@@ -68,7 +68,7 @@ def main(config="../../config.yaml", param="./vechile_config.yaml"):
     try:
         auc_score = roc_auc_score(y_test, y_prob)
     except BaseException:
-        print(f"no auc score available")
+        print("no auc score available")
         return
     recall = recall_score(y_test, y_pred, average="macro")
     pr = precision_score(y_test, y_pred, average="macro")

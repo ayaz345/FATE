@@ -38,11 +38,7 @@ dataset = {
 
 def fit(epoch, model, optimizer, loss, batch_size, dataset):
 
-    print(
-        'model is {}, loss is {}, optimizer is {}'.format(
-            model,
-            loss,
-            optimizer))
+    print(f'model is {model}, loss is {loss}, optimizer is {optimizer}')
     dl = DataLoader(dataset, batch_size=batch_size)
     for i in range(epoch):
         epoch_loss = 0
@@ -53,16 +49,12 @@ def fit(epoch, model, optimizer, loss, batch_size, dataset):
             epoch_loss += l.detach().numpy()
             l.backward()
             optimizer.step()
-        print('epoch is {}, epoch loss is {}'.format(i, epoch_loss))
+        print(f'epoch is {i}, epoch loss is {epoch_loss}')
 
 
 def compute_acc(pred, label, is_multy):
 
-    if is_multy:
-        pred = pred.argmax(axis=1)
-    else:
-        pred = (pred > 0.5) + 0
-
+    pred = pred.argmax(axis=1) if is_multy else (pred > 0.5) + 0
     return float((pred == label).sum() / len(label))
 
 
@@ -84,10 +76,7 @@ def main(config="../../config.yaml", param="param_conf.yaml"):
 
     global_seed(123)
 
-    if is_multy:
-        loss = t.nn.CrossEntropyLoss()
-    else:
-        loss = t.nn.BCELoss()
+    loss = t.nn.CrossEntropyLoss() if is_multy else t.nn.BCELoss()
     data_path = pathlib.Path(data_base_dir)
     data_with_label = pandas.concat(
         [
@@ -98,10 +87,7 @@ def main(config="../../config.yaml", param="param_conf.yaml"):
 
     data = t.Tensor(data_with_label[:, 1:])
     labels = t.Tensor(data_with_label[:, 0])
-    if is_multy:
-        labels = labels.type(t.int64)
-    else:
-        labels = labels.reshape((-1, 1))
+    labels = labels.type(t.int64) if is_multy else labels.reshape((-1, 1))
     ds = TensorDataset(data, labels)
 
     input_shape = data.shape[1]
